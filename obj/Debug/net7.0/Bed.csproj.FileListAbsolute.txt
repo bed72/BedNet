@@ -36,3 +36,5 @@
 /home/bed/Documentos/Code/Net/Bed/bin/Debug/net7.0/Swashbuckle.AspNetCore.SwaggerUI.dll
 /home/bed/Documentos/Code/Net/Bed/obj/Debug/net7.0/Bed.MvcApplicationPartsAssemblyInfo.cs
 /home/bed/Documentos/Code/Net/Bed/bin/Debug/net7.0/MiniValidation.dll
+/home/bed/Documentos/Code/Net/Bed/bin/Debug/net7.0/AutoMapper.dll
+/home/bed/Documentos/Code/Net/Bed/bin/Debug/net7.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll

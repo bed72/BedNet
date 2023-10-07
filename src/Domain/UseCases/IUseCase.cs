@@ -1,4 +1,4 @@
-public interface IUseCase<P> where P : Parameter
+public interface IUseCase<M>
 {
-    public Task<IResult> Execute(P parameter);
+    public Task<IResult> Execute(M data);
 }

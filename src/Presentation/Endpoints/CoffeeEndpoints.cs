@@ -1,52 +1,52 @@
-public static class CoffeeEndpoints
+public static class CoffeeEntityEndpoints
 {
-    public static void UseCoffeeEndpoints(this IEndpointRouteBuilder app)
+    public static void UseCoffeeEntityEndpoints(this IEndpointRouteBuilder app)
     {
         RouteGroupBuilder? coffee = app.MapGroup("/coffee");
-
-        coffee.MapGet("/{id}", Get)
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound)
-            .WithName("GetCoffee")
-            .WithTags("Coffee");
 
         coffee.MapGet("/", GetAll)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithName("GetCoffees")
+            .WithName("Get all")
+            .WithTags("Coffee");
+
+        coffee.MapGet("/{id}", GetById)
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithName("Get by id")
             .WithTags("Coffee");
 
         coffee.MapPost("/", Create)
             .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithName("CreateCoffee")
+            .WithName("Create")
             .WithTags("Coffee");
 
         coffee.MapPut("/{id}", Update)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithName("UpdateCoffee")
+            .WithName("Update")
             .WithTags("Coffee");
 
         coffee.MapDelete("/{id}", Delete)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithName("DeleteCoffee")
+            .WithName("Delete")
             .WithTags("Coffee");
     }
 
-    private async static Task<IResult> GetAll(IUseCase<Parameter> useCase) =>
-        await useCase!.Execute(parameter: new Parameter());
+    private async static Task<IResult> GetAll(IUseCase<Guid?> useCase) =>
+        await useCase.Execute(null);
 
-    private async static Task<IResult> Get(Guid id, IUseCase<GetParameter> useCase) =>
-        await useCase.Execute(parameter: new GetParameter(id));
+    private async static Task<IResult> GetById(Guid id, IUseCase<Guid> useCase) =>
+        await useCase.Execute(id);
 
-    private async static Task<IResult> Create(Coffee data, IUseCase<CreateParameter> useCase) =>
-        await useCase!.Execute(parameter: new CreateParameter(data));
+    private async static Task<IResult> Create(CoffeeInModel data, IUseCase<CoffeeInModel> useCase) =>
+        await useCase.Execute(data);
 
-    private async static Task<IResult> Update(Guid id, Coffee data, IUseCase<UpdateParameter> useCase) =>
-        await useCase!.Execute(parameter: new UpdateParameter(id, data));
+    private async static Task<IResult> Update(Guid id, CoffeeInModel data, IUseCase<Tuple<Guid, CoffeeInModel>> useCase) =>
+        await useCase.Execute(new Tuple<Guid, CoffeeInModel>(id, data));
 
-    private async static Task<IResult> Delete(Guid id, IUseCase<DeleteParameter> useCase) =>
-        await useCase!.Execute(parameter: new DeleteParameter(id));
+    private async static Task<IResult> Delete(Guid id, IUseCase<Guid> useCase) =>
+        await useCase.Execute(id);
 }

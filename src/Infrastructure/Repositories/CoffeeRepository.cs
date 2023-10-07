@@ -1,37 +1,39 @@
 using Microsoft.EntityFrameworkCore;
 
-public sealed class CoffeeRepository : ICoffeeRepository
+public sealed class CoffeeEntityRepository : IRepository
 {
     private readonly Database _database;
 
-    public CoffeeRepository(Database database)
+    public CoffeeEntityRepository(Database database)
     {
         _database = database;
     }
 
-    public async Task<List<Coffee>> GetCoffees() =>
-        await _database.Coffees.AsNoTracking().ToListAsync();
+    public async Task<List<CoffeeEntity>> GetAll() =>
+        await _database.Coffee.AsNoTracking().ToListAsync();
 
-    public async Task<Coffee?> GetCoffee(Guid id) =>
-        await _database.Coffees.FirstOrDefaultAsync(coffee => coffee.Id == id);
+    public async Task<CoffeeEntity?> GetById(Guid id) =>
+        await _database.Coffee.FirstOrDefaultAsync(entity => entity.Id == id);
 
-    public async Task<Coffee> CreateCoffee(Coffee coffee)
+    public async Task<CoffeeEntity> Create(CoffeeEntity data)
     {
-        _database.Coffees.Add(coffee);
+        _database.Coffee.Add(data);
         await _database.SaveChangesAsync();
 
-        return coffee;
+        return data;
     }
 
-    public async Task UpdateCoffee(Coffee coffee)
+    public async Task<CoffeeEntity> Update(CoffeeEntity data)
     {
-        _database.Update(coffee);
+        _database.Update(data);
         await _database.SaveChangesAsync();
+
+        return data;
     }
 
-    public async Task DeleteCoffee(Coffee coffee)
+    public async Task Delete(CoffeeEntity data)
     {
-        _database.Remove(coffee);
+        _database.Remove(data);
         await _database.SaveChangesAsync();
     }
 }

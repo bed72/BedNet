@@ -1,8 +1,10 @@
-public interface ICoffeeRepository
+using System.Reflection;
+
+public interface IRepository
 {
-    Task<List<Coffee>> GetCoffees();
-    Task<Coffee?> GetCoffee(Guid id);
-    Task<Coffee> CreateCoffee(Coffee coffee);
-    Task UpdateCoffee(Coffee coffee);
-    Task DeleteCoffee(Coffee coffee);
+    Task<List<CoffeeEntity>> GetAll();
+    Task<CoffeeEntity?> GetById(Guid id);
+    Task<CoffeeEntity> Create(CoffeeEntity data);
+    Task<CoffeeEntity> Update(CoffeeEntity data);
+    Task Delete(CoffeeEntity data);
 }

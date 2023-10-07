@@ -9,23 +9,25 @@ builder.Services.AddSwaggerGen(collection =>
 {
     collection.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Coffee API Sample",
-        Description = "Developed by Gabriel Ramos - Owner @bed72",
+        Title = "Coffee Shop API Sample",
+        Description = "Developed by Gabriel Ramos - @bed72",
         Contact = new OpenApiContact { Name = "Gabriel Ramos", Email = "developer.bed@gmail.com" },
         License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
     });
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddDbContext<Database>(opt => opt.UseInMemoryDatabase("Coffees"));
+builder.Services.AddDbContext<Database>(opt => opt.UseInMemoryDatabase("coffees"));
 
-builder.Services.AddScoped<ICoffeeRepository, CoffeeRepository>();
+builder.Services.AddAutoMapper(typeof(ToEntityMapper), typeof(ToModelMapper));
 
-builder.Services.AddScoped<IUseCase<Parameter>, GetCoffeesUseCase>();
-builder.Services.AddScoped<IUseCase<GetParameter>, GetCoffeeUseCase>();
-builder.Services.AddScoped<IUseCase<CreateParameter>, CreateCoffeeUseCase>();
-builder.Services.AddScoped<IUseCase<UpdateParameter>, UpdateCoffeeUseCase>();
-builder.Services.AddScoped<IUseCase<DeleteParameter>, DeleteCoffeeUseCase>();
+builder.Services.AddScoped<IRepository, CoffeeEntityRepository>();
+
+builder.Services.AddScoped<IUseCase<Guid>, DeleteUseCase>();
+builder.Services.AddScoped<IUseCase<Guid?>, GetAllUseCase>();
+builder.Services.AddScoped<IUseCase<Guid>, GetByIdUseCase>();
+builder.Services.AddScoped<IUseCase<CoffeeInModel>, CreateUseCase>();
+builder.Services.AddScoped<IUseCase<Tuple<Guid, CoffeeInModel>>, UpdateUseCase>();
 
 WebApplication? app = builder.Build();
 app.UseHttpsRedirection();
@@ -35,6 +37,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCoffeeEndpoints();
+app.UseCoffeeEntityEndpoints();
 
 app.Run();
