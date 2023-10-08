@@ -1,20 +1,23 @@
-using AutoMapper;
 
 public sealed class GetAllUseCase : IUseCase<Guid?>
 {
-    private readonly IMapper _mapper;
     private readonly IRepository _repository;
+    private readonly IMapper<CoffeeEntity, CoffeeOutModel> _mapperOut;
 
-    public GetAllUseCase(IMapper mapper, IRepository repository)
+    public GetAllUseCase(
+        IRepository repository,
+        IMapper<CoffeeEntity, CoffeeOutModel> mapperOut
+    )
     {
-        _mapper = mapper;
+        _mapperOut = mapperOut;
         _repository = repository;
     }
 
     public async Task<IResult> Execute(Guid? _)
     {
         List<CoffeeEntity> response = await _repository.GetAll();
-        CoffeeOutModel model = _mapper.Map<CoffeeOutModel>(response);
+
+        List<CoffeeOutModel> model = response.ConvertAll(_mapperOut.Mapper);
 
         return Results.Ok(model);
     }

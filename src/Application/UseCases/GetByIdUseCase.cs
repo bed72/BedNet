@@ -1,21 +1,25 @@
-using AutoMapper;
-
 public sealed class GetByIdUseCase : IUseCase<Guid>
 {
-    private readonly IMapper _mapper;
     private readonly IRepository _repository;
+    private readonly IMapper<CoffeeEntity, CoffeeOutModel> _mapperOut;
 
-    public GetByIdUseCase(IMapper mapper, IRepository repository)
+    public GetByIdUseCase(
+        IRepository repository,
+        IMapper<CoffeeEntity, CoffeeOutModel> mapperOut
+    )
     {
-        _mapper = mapper;
+        _mapperOut = mapperOut;
         _repository = repository;
     }
 
     public async Task<IResult> Execute(Guid data)
     {
         CoffeeEntity? response = await _repository.GetById(data);
-        CoffeeOutModel model = _mapper.Map<CoffeeOutModel>(response);
 
-        return response is null ? Results.NotFound() : Results.Ok(model);
+        if (response is null) return Results.NotFound();
+
+        CoffeeOutModel model = _mapperOut.Mapper(response);
+
+        return Results.Ok(model);
     }
 }

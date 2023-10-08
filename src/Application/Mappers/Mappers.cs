@@ -1,17 +1,20 @@
-using AutoMapper;
-
-public class ToEntityMapper : Profile
+public interface IMapper<I, O>
 {
-    public ToEntityMapper()
-    {
-        CreateMap<CoffeeInModel, CoffeeEntity>();
-    }
+    public O Mapper(I data);
 }
 
-public class ToModelMapper : Profile
+public class ToEntityMapper : IMapper<CoffeeInModel, CoffeeEntity>
 {
-    public ToModelMapper()
-    {
-        CreateMap<CoffeeEntity, CoffeeOutModel>();
-    }
+    public CoffeeEntity Mapper(CoffeeInModel data) => new(data.Name, data.Price);
+}
+
+public class ToModelMapper : IMapper<CoffeeEntity, CoffeeOutModel>
+{
+    public CoffeeOutModel Mapper(CoffeeEntity data) => new(
+        data.Id,
+        data.Name,
+        data.Price,
+        data.Created,
+        data.Updated
+    );
 }

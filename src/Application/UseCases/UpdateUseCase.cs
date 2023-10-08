@@ -1,13 +1,14 @@
-using AutoMapper;
-
 public sealed class UpdateUseCase : IUseCase<Tuple<Guid, CoffeeInModel>>
 {
-    private readonly IMapper _mapper;
     private readonly IRepository _repository;
+    private readonly IMapper<CoffeeEntity, CoffeeOutModel> _mapperOut;
 
-    public UpdateUseCase(IMapper mapper, IRepository repository)
+    public UpdateUseCase(
+        IRepository repository,
+        IMapper<CoffeeEntity, CoffeeOutModel> mapperOut
+    )
     {
-        _mapper = mapper;
+        _mapperOut = mapperOut;
         _repository = repository;
     }
 
@@ -22,7 +23,7 @@ public sealed class UpdateUseCase : IUseCase<Tuple<Guid, CoffeeInModel>>
         coffee.Updated = DateTime.Now;
 
         CoffeeEntity response = await _repository.Update(coffee);
-        CoffeeOutModel model = _mapper.Map<CoffeeOutModel>(response);
+        CoffeeOutModel model = _mapperOut.Mapper(response);
 
         return Results.Ok(model);
     }

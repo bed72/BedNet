@@ -19,8 +19,6 @@ builder.Services.AddSwaggerGen(collection =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDbContext<Database>(opt => opt.UseInMemoryDatabase("coffees"));
 
-builder.Services.AddAutoMapper(typeof(ToEntityMapper), typeof(ToModelMapper));
-
 builder.Services.AddScoped<IRepository, CoffeeEntityRepository>();
 
 builder.Services.AddScoped<IUseCase<Guid>, DeleteUseCase>();
@@ -28,6 +26,9 @@ builder.Services.AddScoped<IUseCase<Guid?>, GetAllUseCase>();
 builder.Services.AddScoped<IUseCase<Guid>, GetByIdUseCase>();
 builder.Services.AddScoped<IUseCase<CoffeeInModel>, CreateUseCase>();
 builder.Services.AddScoped<IUseCase<Tuple<Guid, CoffeeInModel>>, UpdateUseCase>();
+
+builder.Services.AddScoped<IMapper<CoffeeInModel, CoffeeEntity>, ToEntityMapper>();
+builder.Services.AddScoped<IMapper<CoffeeEntity, CoffeeOutModel>, ToModelMapper>();
 
 WebApplication? app = builder.Build();
 app.UseHttpsRedirection();
