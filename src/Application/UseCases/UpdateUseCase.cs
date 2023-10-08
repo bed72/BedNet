@@ -1,4 +1,6 @@
-public sealed class UpdateUseCase : IUseCase<Tuple<Guid, CoffeeInModel>>
+public interface IUpdateUseCase : IUseCase<Tuple<Guid, CoffeeInModel>> { }
+
+public sealed class UpdateUseCase : IUpdateUseCase
 {
     private readonly IRepository _repository;
     private readonly IMapper<CoffeeEntity, CoffeeOutModel> _mapperOut;

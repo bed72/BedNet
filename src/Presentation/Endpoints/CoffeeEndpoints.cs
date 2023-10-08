@@ -35,18 +35,18 @@ public static class CoffeeEntityEndpoints
             .WithTags("Coffee");
     }
 
-    private async static Task<IResult> GetAll(IUseCase<Guid?> useCase) =>
+    private async static Task<IResult> GetAll(IGetAllUseCase useCase) =>
         await useCase.Execute(null);
 
-    private async static Task<IResult> GetById(Guid id, IUseCase<Guid> useCase) =>
+    private async static Task<IResult> GetById(Guid id, IGetByIdUseCase useCase) =>
         await useCase.Execute(id);
 
-    private async static Task<IResult> Create(CoffeeInModel data, IUseCase<CoffeeInModel> useCase) =>
+    private async static Task<IResult> Create(CoffeeInModel data, ICreateUseCase useCase) =>
         await useCase.Execute(data);
 
-    private async static Task<IResult> Update(Guid id, CoffeeInModel data, IUseCase<Tuple<Guid, CoffeeInModel>> useCase) =>
+    private async static Task<IResult> Update(Guid id, CoffeeInModel data, IUpdateUseCase useCase) =>
         await useCase.Execute(new Tuple<Guid, CoffeeInModel>(id, data));
 
-    private async static Task<IResult> Delete(Guid id, IUseCase<Guid> useCase) =>
+    private async static Task<IResult> Delete(Guid id, IDeleteUseCase useCase) =>
         await useCase.Execute(id);
 }

@@ -21,11 +21,11 @@ builder.Services.AddDbContext<Database>(opt => opt.UseInMemoryDatabase("coffees"
 
 builder.Services.AddScoped<IRepository, CoffeeEntityRepository>();
 
-builder.Services.AddScoped<IUseCase<Guid>, DeleteUseCase>();
-builder.Services.AddScoped<IUseCase<Guid?>, GetAllUseCase>();
-builder.Services.AddScoped<IUseCase<Guid>, GetByIdUseCase>();
-builder.Services.AddScoped<IUseCase<CoffeeInModel>, CreateUseCase>();
-builder.Services.AddScoped<IUseCase<Tuple<Guid, CoffeeInModel>>, UpdateUseCase>();
+builder.Services.AddScoped<IGetAllUseCase, GetAllUseCase>();
+builder.Services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
+builder.Services.AddScoped<ICreateUseCase, CreateUseCase>();
+builder.Services.AddScoped<IUpdateUseCase, UpdateUseCase>();
+builder.Services.AddScoped<IDeleteUseCase, DeleteUseCase>();
 
 builder.Services.AddScoped<IMapper<CoffeeInModel, CoffeeEntity>, ToEntityMapper>();
 builder.Services.AddScoped<IMapper<CoffeeEntity, CoffeeOutModel>, ToModelMapper>();

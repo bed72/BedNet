@@ -1,4 +1,6 @@
-public sealed class CreateUseCase : IUseCase<CoffeeInModel>
+public interface ICreateUseCase : IUseCase<CoffeeInModel> { }
+
+public sealed class CreateUseCase : ICreateUseCase
 {
     private readonly IRepository _repository;
     private readonly IMapper<CoffeeInModel, CoffeeEntity> _mapperIn;

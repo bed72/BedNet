@@ -1,4 +1,6 @@
-public sealed class DeleteUseCase : IUseCase<Guid>
+public interface IDeleteUseCase : IUseCase<Guid> { }
+
+public sealed class DeleteUseCase : IDeleteUseCase
 {
     private readonly IRepository _repository;
 

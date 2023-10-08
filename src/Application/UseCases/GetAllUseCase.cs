@@ -1,5 +1,6 @@
+public interface IGetAllUseCase : IUseCase<Guid?> { }
 
-public sealed class GetAllUseCase : IUseCase<Guid?>
+public sealed class GetAllUseCase : IGetAllUseCase
 {
     private readonly IRepository _repository;
     private readonly IMapper<CoffeeEntity, CoffeeOutModel> _mapperOut;
