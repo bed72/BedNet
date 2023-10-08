@@ -27,9 +27,6 @@ builder.Services.AddScoped<ICreateUseCase, CreateUseCase>();
 builder.Services.AddScoped<IUpdateUseCase, UpdateUseCase>();
 builder.Services.AddScoped<IDeleteUseCase, DeleteUseCase>();
 
-builder.Services.AddScoped<IMapper<CoffeeInModel, CoffeeEntity>, ToEntityMapper>();
-builder.Services.AddScoped<IMapper<CoffeeEntity, CoffeeOutModel>, ToModelMapper>();
-
 WebApplication? app = builder.Build();
 app.UseHttpsRedirection();
 if (app.Environment.IsDevelopment())
@@ -38,6 +35,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCoffeeEntityEndpoints();
+app.UseCoffeeEndpoints();
 
 app.Run();

@@ -3,14 +3,9 @@ public interface IUpdateUseCase : IUseCase<Tuple<Guid, CoffeeInModel>> { }
 public sealed class UpdateUseCase : IUpdateUseCase
 {
     private readonly IRepository _repository;
-    private readonly IMapper<CoffeeEntity, CoffeeOutModel> _mapperOut;
 
-    public UpdateUseCase(
-        IRepository repository,
-        IMapper<CoffeeEntity, CoffeeOutModel> mapperOut
-    )
+    public UpdateUseCase(IRepository repository)
     {
-        _mapperOut = mapperOut;
         _repository = repository;
     }
 
@@ -25,7 +20,7 @@ public sealed class UpdateUseCase : IUpdateUseCase
         coffee.Updated = DateTime.Now;
 
         CoffeeEntity response = await _repository.Update(coffee);
-        CoffeeOutModel model = _mapperOut.Mapper(response);
+        CoffeeOutModel model = (CoffeeOutModel)response;
 
         return Results.Ok(model);
     }

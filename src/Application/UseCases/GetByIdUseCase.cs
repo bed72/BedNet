@@ -3,14 +3,9 @@ public interface IGetByIdUseCase : IUseCase<Guid> { }
 public sealed class GetByIdUseCase : IGetByIdUseCase
 {
     private readonly IRepository _repository;
-    private readonly IMapper<CoffeeEntity, CoffeeOutModel> _mapperOut;
 
-    public GetByIdUseCase(
-        IRepository repository,
-        IMapper<CoffeeEntity, CoffeeOutModel> mapperOut
-    )
+    public GetByIdUseCase(IRepository repository)
     {
-        _mapperOut = mapperOut;
         _repository = repository;
     }
 
@@ -20,7 +15,7 @@ public sealed class GetByIdUseCase : IGetByIdUseCase
 
         if (response is null) return Results.NotFound();
 
-        CoffeeOutModel model = _mapperOut.Mapper(response);
+        CoffeeOutModel model = (CoffeeOutModel)response;
 
         return Results.Ok(model);
     }

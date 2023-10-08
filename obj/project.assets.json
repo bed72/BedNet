@@ -2,6 +2,44 @@
   "version": 3,
   "targets": {
     "net7.0": {
+      "AutoMapper/12.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/AutoMapper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/AutoMapper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "AutoMapper.Extensions.Microsoft.DependencyInjection/12.0.1": {
+        "type": "package",
+        "dependencies": {
+          "AutoMapper": "[12.0.1]",
+          "Microsoft.Extensions.Options": "6.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
+        }
+      },
+      "Fluent.Net/1.0.60": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Fluent.Net.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Fluent.Net.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore/7.0.11": {
         "type": "package",
         "dependencies": {
@@ -408,6 +446,18 @@
         "automapper.extensions.microsoft.dependencyinjection.nuspec",
         "icon.png",
         "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll"
+      ]
+    },
+    "Fluent.Net/1.0.60": {
+      "sha512": "rDX6WFlDEBTuAp//gyd7KqazeoFA8Fgs2D38KlQjwHLrsxSK/rhNwtjHzhJydPu88sufTXIQFWupDzBOlpq2zA==",
+      "type": "package",
+      "path": "fluent.net/1.0.60",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "fluent.net.1.0.60.nupkg.sha512",
+        "fluent.net.nuspec",
+        "lib/netstandard2.0/Fluent.Net.dll"
       ]
     },
     "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore/7.0.11": {
@@ -1218,6 +1268,7 @@
     "net7.0": [
       "AutoMapper >= 12.0.1",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
+      "Fluent.Net >= 1.0.60",
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore >= 7.0.11",
       "Microsoft.EntityFrameworkCore.InMemory >= 7.0.11",
       "MiniValidation >= 0.8.0",
@@ -1268,6 +1319,10 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
             "version": "[12.0.1, )"
+          },
+          "Fluent.Net": {
+            "target": "Package",
+            "version": "[1.0.60, )"
           },
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
             "target": "Package",

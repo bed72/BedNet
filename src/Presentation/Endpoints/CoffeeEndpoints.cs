@@ -1,6 +1,6 @@
 public static class CoffeeEntityEndpoints
 {
-    public static void UseCoffeeEntityEndpoints(this IEndpointRouteBuilder app)
+    public static void UseCoffeeEndpoints(this IEndpointRouteBuilder app)
     {
         RouteGroupBuilder? coffee = app.MapGroup("/coffee");
 

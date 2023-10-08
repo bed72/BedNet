@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "9WhMuuaHVHHRT8Ppfdd4cZbT+k3pMjKTz3hBc3Xjk84uRIE+90gP2e4eFLVAW+eoE74X/Nc3hl7nqsS0MQiXwQ==",
+  "dgSpecHash": "kOwO5p6h4Pt6tjqmShrTB5c904YjESLBGslETWCIkSIgqEsLjfNcx6x0skN4eqobhtDVRtglk7jxWmZX21n8xQ==",
   "success": true,
   "projectFilePath": "/home/bed/Documentos/Code/Net/Bed/Bed.csproj",
   "expectedPackageFiles": [
     "/home/bed/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/home/bed/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "/home/bed/.nuget/packages/fluent.net/1.0.60/fluent.net.1.0.60.nupkg.sha512",
     "/home/bed/.nuget/packages/microsoft.aspnetcore.diagnostics.entityframeworkcore/7.0.11/microsoft.aspnetcore.diagnostics.entityframeworkcore.7.0.11.nupkg.sha512",
     "/home/bed/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",
     "/home/bed/.nuget/packages/microsoft.entityframeworkcore/7.0.11/microsoft.entityframeworkcore.7.0.11.nupkg.sha512",

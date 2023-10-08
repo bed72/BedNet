@@ -1,11 +1,24 @@
-public class CoffeeInModel
+public record CoffeeInModel(string Name, double Price)
 {
-    public string Name { get; set; } = string.Empty;
-    public double Price { get; set; } = double.E;
+    public static explicit operator CoffeeEntity(CoffeeInModel model) => new()
+    {
+        Name = model.Name,
+        Price = model.Price
+    };
 }
 
-public class CoffeeOutModel
+public record CoffeeOutModel
 {
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public double Price { get; set; } = double.E;
+    public DateTime? Created { get; set; }
+    public DateTime? Updated { get; set; }
+
+    public CoffeeOutModel()
+    {
+    }
+
     public CoffeeOutModel(Guid id, string name, double price, DateTime created, DateTime updated)
     {
         Id = id;
@@ -15,9 +28,12 @@ public class CoffeeOutModel
         Updated = updated;
     }
 
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public double Price { get; set; } = double.E;
-    public DateTime? Created { get; set; }
-    public DateTime? Updated { get; set; }
+    public static explicit operator CoffeeOutModel(CoffeeEntity entity) => new()
+    {
+        Id = entity.Id,
+        Name = entity.Name,
+        Price = entity.Price,
+        Created = entity.Created,
+        Updated = entity.Updated
+    };
 }

@@ -3,14 +3,9 @@ public interface IGetAllUseCase : IUseCase<Guid?> { }
 public sealed class GetAllUseCase : IGetAllUseCase
 {
     private readonly IRepository _repository;
-    private readonly IMapper<CoffeeEntity, CoffeeOutModel> _mapperOut;
 
-    public GetAllUseCase(
-        IRepository repository,
-        IMapper<CoffeeEntity, CoffeeOutModel> mapperOut
-    )
+    public GetAllUseCase(IRepository repository)
     {
-        _mapperOut = mapperOut;
         _repository = repository;
     }
 
@@ -18,7 +13,7 @@ public sealed class GetAllUseCase : IGetAllUseCase
     {
         List<CoffeeEntity> response = await _repository.GetAll();
 
-        List<CoffeeOutModel> model = response.ConvertAll(_mapperOut.Mapper);
+        List<CoffeeOutModel> model = response.ConvertAll(data => (CoffeeOutModel)data);
 
         return Results.Ok(model);
     }
