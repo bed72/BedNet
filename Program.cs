@@ -1,22 +1,11 @@
-using Microsoft.OpenApi.Models;
+using FastEndpoints;
+using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 
-WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSwaggerGen();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(collection =>
-{
-    collection.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Coffee Shop API Sample",
-        Description = "Developed by Gabriel Ramos - @bed72",
-        Contact = new OpenApiContact { Name = "Gabriel Ramos", Email = "developer.bed@gmail.com" },
-        License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
-    });
-});
-
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.SwaggerDocument();
+builder.Services.AddFastEndpoints();
 builder.Services.AddDbContext<Database>(opt => opt.UseInMemoryDatabase("coffees"));
 
 builder.Services.AddScoped<IRepository, CoffeeEntityRepository>();
@@ -27,14 +16,24 @@ builder.Services.AddScoped<ICreateUseCase, CreateUseCase>();
 builder.Services.AddScoped<IUpdateUseCase, UpdateUseCase>();
 builder.Services.AddScoped<IDeleteUseCase, DeleteUseCase>();
 
-WebApplication? app = builder.Build();
-app.UseHttpsRedirection();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+WebApplication app = builder.Build();
 
-app.UseCoffeeEndpoints();
+app.UseFastEndpoints(fast =>
+{
+    fast.Endpoints.RoutePrefix = "v1";
+    fast.Errors.ResponseBuilder = (failures, _, __) =>
+        new HttpValidationProblemDetails(
+            failures
+                .GroupBy(failure => failure.PropertyName)
+                .ToDictionary(
+                    keySelector: e => e.Key.ToLower(),
+                    elementSelector: e => e.Select(m => m.ErrorMessage).ToArray()
+                )
+        )
+        {
+            Title = "Parâmetros inválidos.",
+        };
+})
+.UseSwaggerGen();
 
 app.Run();

@@ -1,4 +1,4 @@
-public interface IGetByIdUseCase : IUseCase<Guid> { }
+public interface IGetByIdUseCase : IUseCase<CoffeeOutModel?, Guid> { }
 
 public sealed class GetByIdUseCase : IGetByIdUseCase
 {
@@ -9,14 +9,14 @@ public sealed class GetByIdUseCase : IGetByIdUseCase
         _repository = repository;
     }
 
-    public async Task<IResult> Execute(Guid data)
+    public async Task<CoffeeOutModel?> Execute(Guid data)
     {
         CoffeeEntity? response = await _repository.GetById(data);
 
-        if (response is null) return Results.NotFound();
+        if (response is null) return null;
 
         CoffeeOutModel model = (CoffeeOutModel)response;
 
-        return Results.Ok(model);
+        return model;
     }
 }

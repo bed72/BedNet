@@ -1,4 +1,4 @@
-public interface IGetAllUseCase : IUseCase<Guid?> { }
+public interface IGetAllUseCase : IUseCase<List<CoffeeOutModel>, EmptyModel> { }
 
 public sealed class GetAllUseCase : IGetAllUseCase
 {
@@ -9,12 +9,12 @@ public sealed class GetAllUseCase : IGetAllUseCase
         _repository = repository;
     }
 
-    public async Task<IResult> Execute(Guid? _)
+    public async Task<List<CoffeeOutModel>> Execute(EmptyModel _)
     {
         List<CoffeeEntity> response = await _repository.GetAll();
 
         List<CoffeeOutModel> model = response.ConvertAll(data => (CoffeeOutModel)data);
 
-        return Results.Ok(model);
+        return model;
     }
 }

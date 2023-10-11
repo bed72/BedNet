@@ -1,4 +1,4 @@
-public interface ICreateUseCase : IUseCase<CoffeeInModel> { }
+public interface ICreateUseCase : IUseCase<CoffeeOutModel, CoffeeInModel> { }
 
 public sealed class CreateUseCase : ICreateUseCase
 {
@@ -9,12 +9,12 @@ public sealed class CreateUseCase : ICreateUseCase
         _repository = repository;
     }
 
-    public async Task<IResult> Execute(CoffeeInModel data)
+    public async Task<CoffeeOutModel> Execute(CoffeeInModel data)
     {
         CoffeeEntity entity = (CoffeeEntity)data;
         CoffeeEntity response = await _repository.Create(entity);
         CoffeeOutModel model = (CoffeeOutModel)response;
 
-        return Results.Created($"/coffe/{model.Id}", model);
+        return model; // Results.Created($"/coffe/{model.Id}", model);
     }
 }

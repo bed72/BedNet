@@ -1,4 +1,4 @@
-public interface IUseCase<M>
+public interface IUseCase<R, M>
 {
-    public Task<IResult> Execute(M data);
+    public Task<R> Execute(M data);
 }
