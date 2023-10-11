@@ -1,6 +1,6 @@
 using FastEndpoints;
 
-public class GetAllEndpoint : Endpoint<EmptyModel, List<CoffeeOutModel>>
+public class GetAllEndpoint : EndpointWithoutRequest<List<CoffeeOutModel>>
 {
     private readonly IGetAllUseCase _useCase;
 
@@ -17,9 +17,9 @@ public class GetAllEndpoint : Endpoint<EmptyModel, List<CoffeeOutModel>>
         Routes("/coffee");
     }
 
-    public override async Task HandleAsync(EmptyModel req, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        List<CoffeeOutModel> response = await _useCase.Execute(req);
+        List<CoffeeOutModel> response = await _useCase.Execute(null);
 
         await SendResultAsync(Results.Ok(response));
     }

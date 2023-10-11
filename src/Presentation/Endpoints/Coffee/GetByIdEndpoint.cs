@@ -1,6 +1,6 @@
 using FastEndpoints;
 
-public class GetByIdEndpoint : Endpoint<Guid, CoffeeOutModel>
+public class GetByIdEndpoint : EndpointWithoutRequest<CoffeeOutModel>
 {
     private readonly IGetByIdUseCase _useCase;
 
@@ -14,13 +14,14 @@ public class GetByIdEndpoint : Endpoint<Guid, CoffeeOutModel>
         Tags("Coffee");
         Verbs(Http.GET);
         AllowAnonymous();
-        Get("/coffee/{EmptyModel}");
-        Routes("/coffee/{id:guid}");
+        Get("/coffee/{Guid}");
+        Routes("/coffee/{Guid}");
     }
 
-    public override async Task HandleAsync(Guid req, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        CoffeeOutModel? response = await _useCase.Execute(req);
+        Guid id = Route<Guid>("Guid");
+        CoffeeOutModel? response = await _useCase.Execute(id);
 
         await SendResultAsync(Results.Ok(response));
     }
