@@ -7,6 +7,6 @@ public class CreateSummary : Summary<CreateEndpoint>
         Summary = "Crie uma novo café.";
         Description = "Atualize seu estoque criando um novo café.";
         Response<CoffeeOutModel>(201, "Café criado com sucesso.");
-        Response<FailuresModel>(400, "Falha ao validarde os dados.");
+        Response<FailuresModel>(400, "Falha ao validar os dados.");
     }
 }

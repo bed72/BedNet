@@ -21,6 +21,7 @@ public class CreateEndpoint : Endpoint<CoffeeInModel, CoffeeOutModel>
     {
         CoffeeOutModel? response = await _useCase.Execute(req);
 
-        await SendResultAsync(Results.Created($"/coffe/{response.Id}", response));
+        if (response is not null) await SendResultAsync(Results.Created($"/coffe/{response?.Id}", response));
+        else await SendResultAsync(Results.BadRequest(new FailureModel("Opss não conseguimos salvar seu café.")));
     }
 }
