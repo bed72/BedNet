@@ -1,3 +1,5 @@
+public record EmptyModel();
+
 public record CoffeeInModel(string Name, double Price)
 {
     public static explicit operator CoffeeEntity(CoffeeInModel model) => new()

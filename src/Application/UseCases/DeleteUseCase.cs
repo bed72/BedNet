@@ -1,4 +1,4 @@
-public interface IDeleteUseCase : IUseCase<Guid> { }
+public interface IDeleteUseCase : IUseCase<bool, Guid> { }
 
 public sealed class DeleteUseCase : IDeleteUseCase
 {
@@ -9,15 +9,14 @@ public sealed class DeleteUseCase : IDeleteUseCase
         _repository = repository;
     }
 
-    public async Task<IResult> Execute(Guid data)
+    public async Task<bool> Execute(Guid data)
     {
-
         CoffeeEntity? response = await _repository.GetById(data);
 
-        if (response is null) return Results.NotFound();
+        if (response is null) return false;
 
         await _repository.Delete(response);
 
-        return Results.NoContent();
+        return true;
     }
 }
