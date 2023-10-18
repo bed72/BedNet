@@ -2,11 +2,19 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 
+using Bed.Src.Domain.Repositories;
+using Bed.Src.Application.UseCases;
+using Bed.Src.Infrastructure.Database;
+using Bed.Src.Infrastructure.Repositories;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.SwaggerDocument();
 builder.Services.AddFastEndpoints();
-builder.Services.AddDbContext<Database>(opt => opt.UseInMemoryDatabase("coffees"));
+
+string connection = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ConnectionDatabase>(options => options.UseNpgsql(connection));
 
 builder.Services.AddScoped<IRepository, CoffeeEntityRepository>();
 
@@ -21,6 +29,7 @@ WebApplication app = builder.Build();
 app.UseFastEndpoints(fast =>
 {
     fast.Endpoints.RoutePrefix = "v1";
+    fast.Errors.StatusCode = 422;
     fast.Errors.ResponseBuilder = (failures, _, __) =>
         new HttpValidationProblemDetails(
             failures

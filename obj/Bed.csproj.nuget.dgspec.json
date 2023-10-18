@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/bed/Documentos/Code/Net/Bed/Bed.csproj": {}
+    "/home/bed/Documentos/Code/BackEnd/DotNet/BedNet/Bed.csproj": {}
   },
   "projects": {
-    "/home/bed/Documentos/Code/Net/Bed/Bed.csproj": {
+    "/home/bed/Documentos/Code/BackEnd/DotNet/BedNet/Bed.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bed/Documentos/Code/Net/Bed/Bed.csproj",
+        "projectUniqueName": "/home/bed/Documentos/Code/BackEnd/DotNet/BedNet/Bed.csproj",
         "projectName": "Bed",
-        "projectPath": "/home/bed/Documentos/Code/Net/Bed/Bed.csproj",
+        "projectPath": "/home/bed/Documentos/Code/BackEnd/DotNet/BedNet/Bed.csproj",
         "packagesPath": "/home/bed/.nuget/packages/",
-        "outputPath": "/home/bed/Documentos/Code/Net/Bed/obj/",
+        "outputPath": "/home/bed/Documentos/Code/BackEnd/DotNet/BedNet/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/bed/.nuget/NuGet/NuGet.Config"
@@ -54,7 +54,13 @@
               "target": "Package",
               "version": "[7.0.11, )"
             },
-            "Microsoft.EntityFrameworkCore.InMemory": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.12, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[7.0.11, )"
             }
