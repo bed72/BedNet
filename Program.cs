@@ -2,10 +2,10 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 
-using Bed.Src.Domain.Repositories;
-using Bed.Src.Application.UseCases;
-using Bed.Src.Infrastructure.Database;
-using Bed.Src.Infrastructure.Repositories;
+using Bed.src.domain.repositories;
+using Bed.src.application.usecases;
+using Bed.src.infrastructure.database;
+using Bed.src.infrastructure.repositories;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
