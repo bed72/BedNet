@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Bed.src.domain.entities;
 using Bed.src.domain.repositories;
 using Bed.src.infrastructure.database;
+using LanguageExt.UnsafeValueAccess;
 
 namespace Bed.src.infrastructure.repositories;
 
@@ -75,14 +76,19 @@ public sealed class CoffeeEntityRepository : IRepository
     {
         try
         {
-            // Either<FailureEntity, CoffeeEntity> response = await GetById(id);
+            Either<FailureEntity, CoffeeEntity> response = await GetById(id);
 
-            // if (response.IsLeft) return response;
+            if (response.IsLeft) return response;
 
-            _database.Update(parameter);
-            await _database.SaveChangesAsync();
+            if (response.IsRight && id == response.ValueUnsafe().Id)
+            {
+                _database.Update(parameter);
+                await _database.SaveChangesAsync();
 
-            return parameter;
+                return parameter;
+            }
+
+            return new FailureEntity("Um erro ocorreu ao tentar atualizar o café.");
         }
         catch (Exception)
         {
@@ -97,12 +103,17 @@ public sealed class CoffeeEntityRepository : IRepository
             Either<FailureEntity, CoffeeEntity> response = await GetById(parameter);
 
             if (response.IsLeft)
-                return response.Map(mapper: (_) => false).MapLeft(mapper: (failure) => failure);
+                return new FailureEntity("Não encontramos o café.");
 
-            _database.Remove(parameter);
-            await _database.SaveChangesAsync();
+            if (response.IsRight)
+            {
+                _database.Remove(response.ValueUnsafe());
+                await _database.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+
+            return false;
         }
         catch (Exception)
         {

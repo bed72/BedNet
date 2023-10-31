@@ -24,7 +24,7 @@ namespace Bed.Migrations
 
             modelBuilder.Entity("Bed.src.domain.entities.CoffeeEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 

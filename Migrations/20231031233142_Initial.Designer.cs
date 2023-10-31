@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bed.Migrations
 {
     [DbContext(typeof(ConnectionDatabase))]
-    [Migration("20231031193112_Initial")]
+    [Migration("20231031233142_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -27,7 +27,7 @@ namespace Bed.Migrations
 
             modelBuilder.Entity("Bed.src.domain.entities.CoffeeEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
