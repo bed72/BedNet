@@ -1,6 +1,6 @@
 namespace Bed.src.domain.usecases;
 
-public interface IUseCase<R, M>
+public interface IUseCase<IN, OUT>
 {
-    public Task<R> Execute(M data);
+    public Task<OUT> Execute(IN parameter);
 }

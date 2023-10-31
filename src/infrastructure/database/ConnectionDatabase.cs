@@ -13,5 +13,10 @@ public class ConnectionDatabase : DbContext
         base.OnConfiguring(options);
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CoffeeEntity>().HasIndex(data => data.Name).IsUnique();
+    }
+
     public DbSet<CoffeeEntity> Coffee => Set<CoffeeEntity>();
 }

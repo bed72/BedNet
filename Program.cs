@@ -1,48 +1,54 @@
-using FastEndpoints;
-using FastEndpoints.Swagger;
+using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 using Bed.src.domain.repositories;
 using Bed.src.application.usecases;
+using Bed.src.presentation.endpoints;
 using Bed.src.infrastructure.database;
 using Bed.src.infrastructure.repositories;
+using Microsoft.AspNetCore.Http.Json;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.SwaggerDocument();
-builder.Services.AddFastEndpoints();
+builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(collection =>
+{
+    collection.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Coffee Shop API Sample",
+        Description = "Developed by Gabriel Ramos - @bed72",
+        Contact = new OpenApiContact { Name = "Gabriel Ramos", Email = "developer.bed@gmail.com" },
+        License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
+    });
+});
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ConnectionDatabase>(options => options.UseNpgsql(connection));
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+});
 
 builder.Services.AddScoped<IRepository, CoffeeEntityRepository>();
 
-builder.Services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-builder.Services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
 builder.Services.AddScoped<ICreateUseCase, CreateUseCase>();
+builder.Services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
+builder.Services.AddScoped<IGetPaginateUseCase, GetPaginateUseCase>();
 builder.Services.AddScoped<IUpdateUseCase, UpdateUseCase>();
 builder.Services.AddScoped<IDeleteUseCase, DeleteUseCase>();
 
 WebApplication app = builder.Build();
 
-app.UseFastEndpoints(fast =>
+app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
 {
-    fast.Endpoints.RoutePrefix = "v1";
-    fast.Errors.StatusCode = 422;
-    fast.Errors.ResponseBuilder = (failures, _, __) =>
-        new HttpValidationProblemDetails(
-            failures
-                .GroupBy(failure => failure.PropertyName)
-                .ToDictionary(
-                    keySelector: e => e.Key.ToLower(),
-                    elementSelector: e => e.Select(m => m.ErrorMessage).ToArray()
-                )
-        )
-        {
-            Title = "Parâmetros inválidos.",
-        };
-})
-.UseSwaggerGen();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseCoffeeEndpoints();
 
 app.Run();

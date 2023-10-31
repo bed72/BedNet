@@ -1,12 +1,13 @@
-using Bed.src.application.models;
+using LanguageExt;
 
 using Bed.src.domain.entities;
 using Bed.src.domain.usecases;
+using Bed.src.application.models;
 using Bed.src.domain.repositories;
 
 namespace Bed.src.application.usecases;
 
-public interface IUpdateUseCase : IUseCase<CoffeeOutModel?, Tuple<Guid, CoffeeInModel>> { }
+public interface IUpdateUseCase : IUseCase<Tuple<Guid, CoffeeInModel>, Either<FailureOutModel, CoffeeOutModel>> { }
 
 public sealed class UpdateUseCase : IUpdateUseCase
 {
@@ -17,19 +18,18 @@ public sealed class UpdateUseCase : IUpdateUseCase
         _repository = repository;
     }
 
-    public async Task<CoffeeOutModel?> Execute(Tuple<Guid, CoffeeInModel> data)
+    public async Task<Either<FailureOutModel, CoffeeOutModel>> Execute(Tuple<Guid, CoffeeInModel> parameter)
     {
-        CoffeeEntity? coffee = await _repository.GetById(data.Item1);
+        Guid id = parameter.Item1;
+        CoffeeInModel model = parameter.Item2;
 
-        if (coffee is null) return null;
+        CoffeeEntity entity = (CoffeeEntity)model;
+        entity.Updated = DateTime.Now.ToUniversalTime();
 
-        coffee.Name = data.Item2.Name;
-        coffee.Price = data.Item2.Price;
-        coffee.Updated = DateTime.Now.ToUniversalTime();
+        Either<FailureEntity, CoffeeEntity> response = await _repository.Update(id, entity);
 
-        CoffeeEntity response = await _repository.Update(coffee);
-        CoffeeOutModel model = (CoffeeOutModel)response;
-
-        return model;
+        return response
+            .Map(mapper: (success) => (CoffeeOutModel)success)
+            .MapLeft(mapper: (failure) => (FailureOutModel)failure);
     }
 }

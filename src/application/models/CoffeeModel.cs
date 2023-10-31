@@ -2,8 +2,6 @@ using Bed.src.domain.entities;
 
 namespace Bed.src.application.models;
 
-public record EmptyModel();
-
 public record CoffeeInModel(string Name, double Price)
 {
     public static explicit operator CoffeeEntity(CoffeeInModel model) => new()
@@ -18,8 +16,8 @@ public record CoffeeOutModel
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public double Price { get; set; } = double.E;
-    public DateTime? Created { get; set; }
-    public DateTime? Updated { get; set; }
+    public DateTime? Created { get; set; } = null;
+    public DateTime? Updated { get; set; } = null;
 
     public CoffeeOutModel()
     {

@@ -1,3 +1,4 @@
+
 namespace Bed.src.domain.entities;
 
 public class CoffeeEntity : BaseEntity

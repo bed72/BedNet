@@ -1,11 +1,10 @@
-using FastEndpoints;
 using FluentValidation;
 
 using Bed.src.application.models;
 
 namespace Bed.src.application.validators;
 
-public class CoffeeValidator : Validator<CoffeeInModel>
+public class CoffeeValidator : AbstractValidator<CoffeeInModel>
 {
     public CoffeeValidator()
     {

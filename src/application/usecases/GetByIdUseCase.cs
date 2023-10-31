@@ -1,12 +1,13 @@
-using Bed.src.application.models;
+using LanguageExt;
 
 using Bed.src.domain.usecases;
 using Bed.src.domain.entities;
+using Bed.src.application.models;
 using Bed.src.domain.repositories;
 
 namespace Bed.src.application.usecases;
 
-public interface IGetByIdUseCase : IUseCase<CoffeeOutModel?, Guid> { }
+public interface IGetByIdUseCase : IUseCase<Guid, Either<FailureOutModel, CoffeeOutModel>> { }
 
 public sealed class GetByIdUseCase : IGetByIdUseCase
 {
@@ -17,14 +18,12 @@ public sealed class GetByIdUseCase : IGetByIdUseCase
         _repository = repository;
     }
 
-    public async Task<CoffeeOutModel?> Execute(Guid data)
+    public async Task<Either<FailureOutModel, CoffeeOutModel>> Execute(Guid parameter)
     {
-        CoffeeEntity? response = await _repository.GetById(data);
+        Either<FailureEntity, CoffeeEntity> response = await _repository.GetById(parameter);
 
-        if (response is null) return null;
-
-        CoffeeOutModel model = (CoffeeOutModel)response;
-
-        return model;
+        return response
+            .Map(mapper: (success) => (CoffeeOutModel)success)
+            .MapLeft(mapper: (failure) => (FailureOutModel)failure);
     }
 }
