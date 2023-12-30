@@ -1,30 +1,26 @@
+using LanguageExt;
+
 using Bed.src.application.models;
 
 using Bed.src.domain.entities;
 using Bed.src.domain.usecases;
 using Bed.src.domain.repositories;
 
-using LanguageExt;
-
 namespace Bed.src.application.usecases;
 
 public interface ICreateUseCase : IUseCase<CoffeeInModel, Either<FailureOutModel, CoffeeOutModel>> { }
 
-public sealed class CreateUseCase : ICreateUseCase
+public sealed class CreateUseCase(IRepository repository) : ICreateUseCase
 {
-    private readonly IRepository _repository;
+    private readonly IRepository _repository = repository;
 
-    public CreateUseCase(IRepository repository)
+    public async Task<Either<FailureOutModel, CoffeeOutModel>> Execute(
+        CoffeeInModel parameter,
+        CancellationToken cancellation
+    )
     {
-        _repository = repository;
-    }
-
-    public async Task<Either<FailureOutModel, CoffeeOutModel>> Execute(CoffeeInModel parameter)
-    {
-        CoffeeEntity entity = (CoffeeEntity)parameter;
-        entity.Created = DateTime.Now.ToUniversalTime();
-
-        Either<FailureEntity, CoffeeEntity> response = await _repository.Create(entity);
+        Either<FailureEntity, CoffeeEntity> response =
+            await _repository.Create((CoffeeEntity)parameter, cancellation);
 
         return response
             .Map(mapper: (success) => (CoffeeOutModel)success)

@@ -7,21 +7,19 @@ using Bed.src.domain.repositories;
 
 namespace Bed.src.application.usecases;
 
-public interface IGetPaginateUseCase : IUseCase<PaginateInModel, Either<FailureOutModel, List<CoffeeOutModel>>> { }
+public interface IGetPaginateUseCase : IUseCase<Tuple<int, int>, Either<FailureOutModel, List<CoffeeOutModel>>> { }
 
-public sealed class GetPaginateUseCase : IGetPaginateUseCase
+public sealed class GetPaginateUseCase(IRepository repository) : IGetPaginateUseCase
 {
-    private readonly IRepository _repository;
+    private readonly IRepository _repository = repository;
 
-    public GetPaginateUseCase(IRepository repository)
-    {
-        _repository = repository;
-    }
-
-    public async Task<Either<FailureOutModel, List<CoffeeOutModel>>> Execute(PaginateInModel parameter)
+    public async Task<Either<FailureOutModel, List<CoffeeOutModel>>> Execute(
+        Tuple<int, int> parameter,
+        CancellationToken cancellation
+    )
     {
         Either<FailureEntity, List<CoffeeEntity>> response =
-            await _repository.GetPaginete(parameter.page, parameter.limit);
+            await _repository.GetPaginete(parameter.Item1, parameter.Item2, cancellation);
 
         return response
             .Map(mapper: (success) => success.ConvertAll(data => (CoffeeOutModel)data))

@@ -1,1 +1,0 @@
-public record PaginateInModel(int page, int limit);

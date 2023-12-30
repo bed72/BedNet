@@ -2,6 +2,7 @@ using LanguageExt;
 
 using Bed.src.application.models;
 using Bed.src.application.usecases;
+using Bed.src.application.validators;
 
 namespace Bed.src.presentation.endpoints;
 
@@ -27,13 +28,15 @@ public static class UseEndpoints
             .WithTags("Coffee")
             .WithName("Create")
             .Produces(StatusCodes.Status201Created)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .AddEndpointFilter<FilterValidation<CoffeeInModel>>();
 
         coffee.MapPut("/{id}", Update)
             .WithTags("Coffee")
             .WithName("Update")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .AddEndpointFilter<FilterValidation<CoffeeInModel>>();
 
         coffee.MapDelete("/{id}", Delete)
             .WithTags("Coffee")
@@ -42,10 +45,15 @@ public static class UseEndpoints
             .Produces(StatusCodes.Status400BadRequest);
     }
 
-    private async static Task<IResult> GetPaginate(int? page, int? limit, IGetPaginateUseCase useCase)
+    private async static Task<IResult> GetPaginate(
+        int? page,
+        int? limit,
+        IGetPaginateUseCase useCase,
+        CancellationToken cancellation
+    )
     {
         Either<FailureOutModel, List<CoffeeOutModel>> response =
-            await useCase.Execute(new PaginateInModel(page ?? 1, limit ?? 10));
+            await useCase.Execute(new Tuple<int, int>(page ?? 1, limit ?? 10), cancellation);
 
         return response.Match(
            Right: success => Results.Ok(success),
@@ -53,9 +61,13 @@ public static class UseEndpoints
        );
     }
 
-    private async static Task<IResult> GetById(Guid id, IGetByIdUseCase useCase)
+    private async static Task<IResult> GetById(
+        Guid id,
+        IGetByIdUseCase useCase,
+        CancellationToken cancellation
+    )
     {
-        Either<FailureOutModel, CoffeeOutModel> response = await useCase.Execute(id);
+        Either<FailureOutModel, CoffeeOutModel> response = await useCase.Execute(id, cancellation);
 
         return response.Match(
             Right: success => Results.Ok(success),
@@ -63,9 +75,13 @@ public static class UseEndpoints
         );
     }
 
-    private async static Task<IResult> Create(CoffeeInModel data, ICreateUseCase useCase)
+    private async static Task<IResult> Create(
+        CoffeeInModel data,
+        ICreateUseCase useCase,
+        CancellationToken cancellation
+    )
     {
-        Either<FailureOutModel, CoffeeOutModel> response = await useCase.Execute(data);
+        Either<FailureOutModel, CoffeeOutModel> response = await useCase.Execute(data, cancellation);
 
         return response.Match(
             Left: failure => Results.BadRequest(failure),
@@ -73,9 +89,16 @@ public static class UseEndpoints
         );
     }
 
-    private async static Task<IResult> Update(Guid id, CoffeeInModel data, IUpdateUseCase useCase)
+    private async static Task<IResult> Update(
+        Guid id,
+        CoffeeInModel data,
+        IUpdateUseCase useCase,
+        CancellationToken cancellation
+    )
     {
-        Either<FailureOutModel, CoffeeOutModel> response = await useCase.Execute(new Tuple<Guid, CoffeeInModel>(id, data));
+        Either<FailureOutModel, CoffeeOutModel> response = await useCase.Execute(
+            new Tuple<Guid, CoffeeInModel>(id, data), cancellation
+        );
 
         return response.Match(
             Right: success => Results.Ok(success),
@@ -83,9 +106,9 @@ public static class UseEndpoints
         );
     }
 
-    private async static Task<IResult> Delete(Guid id, IDeleteUseCase useCase)
+    private async static Task<IResult> Delete(Guid id, IDeleteUseCase useCase, CancellationToken cancellation)
     {
-        Either<FailureOutModel, bool> response = await useCase.Execute(id);
+        Either<FailureOutModel, bool> response = await useCase.Execute(id, cancellation);
 
         return response.Match(
             Left: failure => Results.BadRequest(failure),

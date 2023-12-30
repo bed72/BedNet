@@ -9,24 +9,17 @@ namespace Bed.src.application.usecases;
 
 public interface IUpdateUseCase : IUseCase<Tuple<Guid, CoffeeInModel>, Either<FailureOutModel, CoffeeOutModel>> { }
 
-public sealed class UpdateUseCase : IUpdateUseCase
+public sealed class UpdateUseCase(IRepository repository) : IUpdateUseCase
 {
-    private readonly IRepository _repository;
+    private readonly IRepository _repository = repository;
 
-    public UpdateUseCase(IRepository repository)
+    public async Task<Either<FailureOutModel, CoffeeOutModel>> Execute(
+        Tuple<Guid, CoffeeInModel> parameter,
+        CancellationToken cancellation
+    )
     {
-        _repository = repository;
-    }
-
-    public async Task<Either<FailureOutModel, CoffeeOutModel>> Execute(Tuple<Guid, CoffeeInModel> parameter)
-    {
-        Guid id = parameter.Item1;
-        CoffeeInModel model = parameter.Item2;
-
-        CoffeeEntity entity = (CoffeeEntity)model;
-        entity.Updated = DateTime.Now.ToUniversalTime();
-
-        Either<FailureEntity, CoffeeEntity> response = await _repository.Update(id, entity);
+        Either<FailureEntity, CoffeeEntity> response = await
+            _repository.Update(parameter.Item1, (CoffeeEntity)parameter.Item2, cancellation);
 
         return response
             .Map(mapper: (success) => (CoffeeOutModel)success)

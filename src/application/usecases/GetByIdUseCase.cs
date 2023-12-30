@@ -9,18 +9,16 @@ namespace Bed.src.application.usecases;
 
 public interface IGetByIdUseCase : IUseCase<Guid, Either<FailureOutModel, CoffeeOutModel>> { }
 
-public sealed class GetByIdUseCase : IGetByIdUseCase
+public sealed class GetByIdUseCase(IRepository repository) : IGetByIdUseCase
 {
-    private readonly IRepository _repository;
+    private readonly IRepository _repository = repository;
 
-    public GetByIdUseCase(IRepository repository)
+    public async Task<Either<FailureOutModel, CoffeeOutModel>> Execute(
+        Guid parameter,
+        CancellationToken cancellation
+    )
     {
-        _repository = repository;
-    }
-
-    public async Task<Either<FailureOutModel, CoffeeOutModel>> Execute(Guid parameter)
-    {
-        Either<FailureEntity, CoffeeEntity> response = await _repository.GetById(parameter);
+        Either<FailureEntity, CoffeeEntity> response = await _repository.GetById(parameter, cancellation);
 
         return response
             .Map(mapper: (success) => (CoffeeOutModel)success)

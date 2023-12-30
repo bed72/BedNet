@@ -1,5 +1,7 @@
+using FluentValidation;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 
 using Bed.src.domain.repositories;
@@ -7,7 +9,6 @@ using Bed.src.application.usecases;
 using Bed.src.presentation.endpoints;
 using Bed.src.infrastructure.database;
 using Bed.src.infrastructure.repositories;
-using Microsoft.AspNetCore.Http.Json;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,9 @@ builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
+
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddScoped<IRepository, CoffeeEntityRepository>();
 

@@ -9,18 +9,13 @@ namespace Bed.src.application.usecases;
 
 public interface IDeleteUseCase : IUseCase<Guid, Either<FailureOutModel, bool>> { }
 
-public sealed class DeleteUseCase : IDeleteUseCase
+public sealed class DeleteUseCase(IRepository repository) : IDeleteUseCase
 {
-    private readonly IRepository _repository;
+    private readonly IRepository _repository = repository;
 
-    public DeleteUseCase(IRepository repository)
+    public async Task<Either<FailureOutModel, bool>> Execute(Guid parameter, CancellationToken cancellation)
     {
-        _repository = repository;
-    }
-
-    public async Task<Either<FailureOutModel, bool>> Execute(Guid parameter)
-    {
-        Either<FailureEntity, bool> response = await _repository.Delete(parameter);
+        Either<FailureEntity, bool> response = await _repository.Delete(parameter, cancellation);
 
         return response
             .Map(mapper: (success) => success)
